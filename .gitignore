@@ -1,4 +1,5 @@
 *.o
 *.gch
 ptcloud_world
+ptcloud_conf
 /Depth2VRML_old

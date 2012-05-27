@@ -73,6 +73,9 @@ int main(int argc, char** argv)
 	  
   std::string ConfigName = argv[ArgCount++];
   std::string InputName  = argv[ArgCount++];
+#ifdef CONF_
+  std::string ConfName   = argv[ArgCount++];
+#endif
   std::string OutputName = argv[ArgCount++];
   std::string RefImPath  = argv[ArgCount++];
   std::string RefImName  = argv[ArgCount++];
@@ -118,6 +121,14 @@ int main(int argc, char** argv)
   ifm.read((char*)InputBuf, ImWidth*ImHeight*sizeof(float));
   ifm.close();
 
+#ifdef CONF_
+  // Read confidence map
+  float* ConfBuf = new float[ImWidth*ImHeight*sizeof(float)];
+  ifm.open(ConfName.c_str());
+  ifm.read((char*)ConfBuf, ImWidth*ImHeight*sizeof(float));
+  ifm.close();
+#endif
+
   int OutputIdx = 0;
   int InputIdx  = 0;
 
@@ -127,10 +138,14 @@ int main(int argc, char** argv)
     {
       for(int j=0; j<ImWidth; j++)
 	{
-	  if(InputBuf[InputIdx]<=MinDepth+0.2    || 
-	     InputBuf[InputIdx]>=MaxDepth-0.2    ||
+	  if(InputBuf[InputIdx]<=MinDepth        || 
+	     InputBuf[InputIdx]>=MaxDepth        ||
 	     i<ClipUp   || i>ImHeight-ClipDown   ||
-	     j<ClipLeft || j>ImWidth-ClipRight)
+	     j<ClipLeft || j>ImWidth-ClipRight
+#ifdef CONF_
+	     || ConfBuf[InputIdx]<=0.0
+#endif	     
+	     )
 	    {
 	      InputIdx++;
 	      continue;
@@ -188,6 +203,10 @@ int main(int argc, char** argv)
   delete[] OutputBuf;
   delete[] PtCloud;
   delete[] PtColor;
+
+#ifdef CONF_
+  delete[] ConfBuf;
+#endif
 
   return 0;
 }

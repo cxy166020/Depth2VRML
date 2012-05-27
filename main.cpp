@@ -189,15 +189,15 @@ int main(int argc, char** argv)
   std::cout << "Number of output points: " << OutputIdx << std::endl; 
 
   fiv_vrml vrml;
-  vrml.begin_sub_file("test.wrl");
+  vrml.begin_sub_file(const_cast<char*>(OutputName.c_str()));
   vrml.add_points((double*)PtCloud, PtColor, OutputIdx);
   vrml.end_sub_file();
 
-  std::ofstream ofm;
-  ofm.open(OutputName.c_str(), std::ios::trunc);
-  ofm.write((char*)(&OutputIdx), sizeof(int));
-  ofm.write((char*)OutputBuf, OutputIdx*sizeof(coord));
-  ofm.close();
+  // std::ofstream ofm;
+  // ofm.open(OutputName.c_str(), std::ios::trunc);
+  // ofm.write((char*)(&OutputIdx), sizeof(int));
+  // ofm.write((char*)OutputBuf, OutputIdx*sizeof(coord));
+  // ofm.close();
   
   delete[] InputBuf;
   delete[] OutputBuf;

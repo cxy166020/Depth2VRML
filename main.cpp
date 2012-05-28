@@ -75,6 +75,7 @@ int main(int argc, char** argv)
   std::string InputName  = argv[ArgCount++];
 #ifdef CONF_
   std::string ConfName   = argv[ArgCount++];
+  float ConfThresh = atof(argv[ArgCount++]);
 #endif
   std::string OutputName = argv[ArgCount++];
   std::string RefImPath  = argv[ArgCount++];
@@ -143,7 +144,7 @@ int main(int argc, char** argv)
 	     i<ClipUp   || i>ImHeight-ClipDown   ||
 	     j<ClipLeft || j>ImWidth-ClipRight
 #ifdef CONF_
-	     || ConfBuf[InputIdx]<=0.0
+	     || ConfBuf[InputIdx]<=ConfThresh
 #endif	     
 	     )
 	    {
